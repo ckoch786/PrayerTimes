@@ -1,6 +1,5 @@
-http://www.islamicfinder.org/prayer_service.php?country=Usa&city=Cleveland&state=OH&zipcode=&latitude=41.4995&longitude=-81.6959&timezone=-5.0&HanfiShafi=1&pmethod=5&fajrTwilight1=&fajrTwilight2=&ishaTwilight=0&ishaInterval=0&dhuhrInterval=1&maghribInterval=1&dayLight=1&simpleFormat=xml&monthly=1&month=
 
-﻿<?xml version="1.0"?><prayer>
+<?xml version="1.0"?><prayer>
 	<city>Cleveland</city>
 	<country>Usa</country>
 	<website>www.IslamicFinder.org</website>
