@@ -1,36 +1,80 @@
 #!/usr/bin/python
 
+# Copyright 2012 Cory Koch
+#
+# This file is part of PrayerTimes.
+#
+# PrayerTimes is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# PrayerTimes is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PrayerTimes. If not, see <http://www.gnu.org/licenses/>.
+#
+# ********************************************************************
+  
 import urllib2
 from BeautifulSoup import BeautifulSoup
+import os
 
+HOME = os.getenv("HOME")
 # Pain to parse but gives more options
 islamicFinder="http://www.islamicfinder.org/prayerDetail.php?country=usa&city=Cleveland&state=OH&id=18707&month=&year=&email=&home=2012-7-18&lang=&aversion=&athan=&monthly="
 
 # Easy to parse
 ICGC="http://www.iccleveland.org/"
+PAGE = urllib2.urlopen(ICGC)
+#PAGE = check_cache()
+SOUP = BeautifulSoup(PAGE)
+
+PRAYER_TIMES_TBL = SOUP.find('table', attrs={'class':'stripe leftjustify', 'cellspacing':'0'})
+INFO             = SOUP.find('div', attrs={'class':'info'})
+
+DATE = INFO.findAll('b')
+COLS = PRAYER_TIMES_TBL.findAll('td')
 
 # Check to see if a cache exists
 # speed up performance/ reduce load on servers.
 
+def open_cache():
+    '''open the prayertimes cache'''
+    try:
+        f = open('HOME/.prayertime', 'r+')
+    except IOError as e:
+        print "I/O error({0}): {1}".format(e.errno, e.strerror)
+        
+    return f
 
-if some_file exist and the_date == get_date():
-    page = some_file
-# cache DNE or is out of date
-else:
-    page = urllib2.urlopen(ICGC)
-    write_to_cache(page)
+def write_to_cache(x, f):
+    '''write the prayer times to cache'''
+    f.write(page)
+    
 
-soup = BeautifulSoup(page)
+def check_cache():
+    f = open_cach()
+    if True:#f.readline() == :
+        page = f.read()
+    
+    # cache DNE or is out of date
+    else:
+        try:
+            page = urllib2.urlopen(ICGC)
+            write_to_cache(page, f)
+        except:
+            print "The site must be down..."
+    
+    return page
 
-prayer_times_tbl = soup.find('table', attrs={'class':'stripe leftjustify', 'cellspacing':'0'})
-info             = soup.find('div', attrs={'class':'info'})
-
-date = info.findAll('b')
-cols = prayer_times_tbl.findAll('td')
 
 def print_date():
     '''print date from site '''
-    for i in date:
+    for i in DATE:
         print i.text
         print '-----------------'
 
@@ -41,7 +85,7 @@ def print_prayer_time():
     x = 0
     times = []
     prayers = []
-    for element in cols:
+    for element in COLS:
     
         x=x+1
         if (x %2 ) == 0:
@@ -74,7 +118,7 @@ def print_prayer_time():
 
 def get_date():
     ''' gets date from site '''
-    for i in date:
+    for i in DATE:
         return i.text
 
 
@@ -84,7 +128,7 @@ def get_prayer_times():
     times = []
     prayers = []
     prayer_time = []
-    for element in cols:
+    for element in COLS:
     
         x=x+1
         if (x %2 ) == 0:
